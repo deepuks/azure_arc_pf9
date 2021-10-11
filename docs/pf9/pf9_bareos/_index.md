@@ -15,13 +15,13 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
 * A working KUBECONFIG file and the [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally.
 
-*All PMK cluster nodes would have these installed. If using a different host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config .* 
+  *All PMK cluster nodes would have these installed. If using a different host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config .* 
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 
 * [Helm](https://helm.sh/docs/intro/install/) version 3+ , to install the Azure Arc agents on the cluster.
 
-* Enable subscription with the two resource providers for Azure Arc-enabled Kubernetes.
+* [Enable subscription](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider) with the two resource providers for Azure Arc-enabled Kubernetes.
 
   ```shell
   az provider register --namespace Microsoft.Kubernetes
@@ -162,7 +162,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   ![Cluster Created](./04.png)
 
-* Set the environment variables according to your Azure service principal name and Azure environment.
+* Once cluster is Ready, set the environment variables according to your Azure service principal name and Azure environment.
 
   ```shell
   export appId=”xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
@@ -178,7 +178,12 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   ```shell
   az login --service-principal --username $appId --password $password --tenant $tenantId
+  ```
 
+  An example output is shown below;
+
+  ```shell
+  $ az login --service-principal --username $appId --password $password --tenant $tenantId
     [
     {
         "cloudName": "AzureCloud",
@@ -206,7 +211,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
   An example output would look like below;
 
   ```shell
-  az connectedk8s connect --name $arcClusterName --resource-group $resourceGroup
+  $ az connectedk8s connect --name $arcClusterName --resource-group $resourceGroup
 
   This operation might take a while...
 

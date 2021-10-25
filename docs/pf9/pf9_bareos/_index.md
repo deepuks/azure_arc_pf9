@@ -15,7 +15,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
 * An Ubuntu 20.04 installed physical machine or VM. For this demonstration, we would be using single node quick cluster. This machine would also act as our management host.
 
-* The [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally. Follow the below steps to install kubectl on Ubuntu using *Apt* tool.
+* The [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally. Follow the below steps to install kubectl on the Ubuntu host using *Apt* tool.
 
 ```shell
 sudo apt-get update
@@ -26,8 +26,8 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 ```
 
-  "> Note: The kubectl package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository."
-  "> All PMK cluster nodes would have these installed. If using an external host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config ."
+  > **Note:** The kubectl package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository.
+  > **All PMK cluster nodes would have these installed. If using an external host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config**
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 
@@ -105,7 +105,7 @@ sudo apt-get install -y kubectl
 
   ```shell
   az ad sp create-for-rbac -n "platform9-AzureArcK8s" --role contributor
-  Creating 'contributor' role assignment under scope '/subscriptions/576a4e39-4a73-4699-bafe-0093c02c336e'
+  Creating 'contributor' role assignment under scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
   The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
   'name' property in the output is deprecated and will be removed in the future. Use 'appId' instead.
 
@@ -118,7 +118,7 @@ sudo apt-get install -y kubectl
   }
   ```
 
-  *Note : It is highly recommended to scope the service principal to a specific [Azure subscription and resource group](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest) as well considering using a [less privileged service principal account](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest).*
+  > *Note : It is highly recommended to scope the service principal to a specific [Azure subscription and resource group](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest) as well considering using a [less privileged service principal account](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest).*
 
 * Create a new Azure resource group where you want the PMK cluster to show up.
 
@@ -130,11 +130,13 @@ sudo apt-get install -y kubectl
 
   ```shell
   az group create -l eastus -n Platform9-Arc-k8s-Clusters
-
+  ```
   
-  Output :
+  The output would look like below:
+
+  ```shell
     {
-    "id": "/subscriptions/576a4e39-4a73-4699-bafe-0093c02c336e/resourceGroups/deepuks-Arc-k8s-Clusters",
+    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/deepuks-Arc-k8s-Clusters",
     "location": "eastus",
     "managedBy": null,
     "name": "Platform9-Arc-k8s-Clusters",
@@ -146,21 +148,31 @@ sudo apt-get install -y kubectl
     }
   ```
 
-  *If you have an existing resource group, it can be used instead of creating a new one. Mention that to the resourceGroup in the environment variables.*
-
 ## Deployment
 
-* Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) .
-
-  The cluster creation is done from the PMK Management Plane UI. If you do not have a registered Management Plane with Platform9, you can create one easily using [PMK Free Tier deployment](https://platform9.com/managed-kubernetes/)
-
-  For a BareOS cluster, you will need to have the nodes registered with the PMK Management Plane on which the cluster is to be deployed. A *pf9ctl* utility is provided to setup the nodes and get connected with Management Plane.
-
-  The steps for cluster creation will follow as below;
-
-  Login to your Management Plane.
+* Login to your Management Plane.
 
   ![PMK Management Plane Login Page](./01.png)
+
+  > **If you do not have a registered Management Plane with Platform9, you can create one easily using [PMK Free Tier deployment](https://platform9.com/managed-kubernetes/)**
+
+* Onboard the Ubuntu host to your Management Plane.
+
+  For a BareOS cluster, you will need to have the nodes registered with the PMK Management Plane on which the cluster is to be deployed. For this, first add the node.
+
+  ![Onboard a node](./09.png)
+
+  This should take you to the Node onboarding page. A **pf9ctl** utility is provided to setup the nodes and get connected with Management Plane. Follow the instructions to download and install the utility, which we will use to prepare the node and connect it with your Platform9 Management Plane.
+
+  ![PF9 CLI](./10.png)
+
+  > **Note: Preparing the node and connecting it to Management Plane might take approximately 4-5 minutes to complete.**
+
+* Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal).
+
+  The cluster creation is done from the PMK Management Plane UI.
+
+  The steps for cluster creation will follow as below;
 
   Click to add cluster to the Management Plane.
 
@@ -181,10 +193,10 @@ sudo apt-get install -y kubectl
   export password=”XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX”
   export tenantId=”xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
   export resourceGroup=”Platform9-Arc-k8s-Clusters”
-  export arcClusterName=”platform9-pf9-arc-k8s-cluster1”
+  export arcClusterName=”Arc-Platform9-Demo”
   ```
 
-  *The values can referenced from the service principal and resource groups outputs.*
+  > *The values can referenced from the service principal and resource groups outputs.*
 
 * Login to your Azure subscription using the Service Principal created.
 
@@ -234,7 +246,7 @@ sudo apt-get install -y kubectl
     "agentVersion": null,
     "connectivityStatus": "Connecting",
     "distribution": "generic",
-    "id": "/subscriptions/576a4e39-4a73-4699-bafe-0093c02c336e/resourceGroups/deepuks-Arc-k8s-Clusters/providers/Microsoft.Kubernetes/connectedClusters/platform9-pf9-arc-k8s-cluster1",
+    "id": "/subscriptions/576a4e39-4a73-4699-bafe-0093c02c336e/resourceGroups/deepuks-Arc-k8s-Clusters/providers/Microsoft.Kubernetes/connectedClusters/Arc-Platform9-Demo",
     "identity": {
         "principalId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -245,7 +257,7 @@ sudo apt-get install -y kubectl
     "lastConnectivityTime": null,
     "location": "eastus",
     "managedIdentityCertificateExpirationTime": null,
-    "name": "platform9-pf9-arc-k8s-cluster1",
+    "name": "Arc-Platform9-Demo",
     "offering": null,
     "provisioningState": "Succeeded",
     "resourceGroup": "Platform9-Arc-k8s-Clusters",

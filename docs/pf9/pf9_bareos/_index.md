@@ -9,13 +9,25 @@ description: >
 ## Deploy a Platform9 Managed Kubernetes cluster and connect it to Azure Arc
 
 The following document will guide on how to deploy a Kubernetes cluster with [Platform9 Managed Kubernetes (PMK)](https://platform9.com/managed-kubernetes/) and have it as a connected Azure Arc Kubernetes resource.
-With PMK, you can have your clusters deployed on-premises, in public clouds or at the edge. In this document, we'll explain the steps on how to create an On-premise [BareOS](https://platform9.com/docs/kubernetes/bareos-what-is-bareos) cluster using PMK and connect it to Microsoft Azure Arc.
+With PMK, you can have your clusters deployed on-premises, in public clouds or at the edge. In this document, we'll explain the steps on how to create an on-premise [BareOS](https://platform9.com/docs/kubernetes/bareos-what-is-bareos) cluster using PMK and connect it to Microsoft Azure Arc.
 
 ## Prerequisites
 
-* A working KUBECONFIG file and the [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally.
+* An Ubuntu 20.04 installed physical machine or VM. For this demonstration, we would be using single node quick cluster. This machine would also act as our management host.
 
-  *All PMK cluster nodes would have these installed. If using a different host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config .* 
+* The [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally. Follow the below steps to install kubectl on Ubuntu using *Apt* tool.
+
+```shell
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+```
+
+  "> Note: The kubectl package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository."
+  "> All PMK cluster nodes would have these installed. If using an external host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config ."
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 

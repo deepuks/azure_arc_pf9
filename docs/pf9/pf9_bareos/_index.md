@@ -9,22 +9,22 @@ description: >
 ## Deploy a Platform9 Managed Kubernetes cluster and connect it to Azure Arc
 
 The following document will guide on how to deploy a Kubernetes cluster with [Platform9 Managed Kubernetes (PMK)](https://platform9.com/managed-kubernetes/) and have it as a connected Azure Arc Kubernetes resource.
-With PMK, you can have your clusters deployed on-premises, in public clouds or at the edge. In this document, we'll explain the steps on how to create an on-premise [BareOS](https://platform9.com/docs/kubernetes/bareos-what-is-bareos) cluster using PMK and connect it to Microsoft Azure Arc.
+With PMK, you can have your clusters deployed on-premises, in public clouds or at the edge. In this document, we'll explain the steps on how to create an **on-premise [BareOS](https://platform9.com/docs/kubernetes/bareos-what-is-bareos) cluster** using **PMK** and connect it to **Microsoft Azure Arc**.
 
 ## Prerequisites
 
-* An Ubuntu 20.04 installed physical machine or VM. For this demonstration, we would be using single node quick cluster. This machine would also act as our management host.
+* An Ubuntu 20.04 installed physical machine or VM. For this demonstration, we would be using single node quick cluster installation. This machine would also act as our management host.
 
-* The [kubectl](https://platform9.com/learn/kubectl) exe for cluster management locally. Follow the below steps to install kubectl on the Ubuntu host using *Apt* tool.
+* The [kubectl](https://platform9.com/learn/tutorials/kubectl) exe for cluster management locally. In case you want to have a seperate host for cluster management, follow the below steps to [install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management).
 
-```shell
-sudo apt-get update
-sudo apt-get install -y apt-transport-https ca-certificates curl
-sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubectl
-```
+  ```shell
+  sudo apt-get update
+  sudo apt-get install -y apt-transport-https ca-certificates curl
+  sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  sudo apt-get update
+  sudo apt-get install -y kubectl
+  ```
 
   > **Note:** The kubectl package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository.
   > **All PMK cluster nodes would have these installed. If using an external host for managing the cluster, you would require to export the "kubeconfig".yaml path to KUBECONFIG variable or save it to /$HOME/.kube/config**
@@ -120,7 +120,7 @@ sudo apt-get install -y kubectl
 
   > *Note : It is highly recommended to scope the service principal to a specific [Azure subscription and resource group](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest) as well considering using a [less privileged service principal account](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest).*
 
-* Create a new Azure resource group where you want the PMK cluster to show up.
+* Create an Azure resource group where you want the PMK cluster to show up.
 
   ```shell
   az group create -l <Azure Region> -n <resource group name>
@@ -276,7 +276,7 @@ sudo apt-get install -y kubectl
     }
   ```
 
-  *Note : The KUBECONFIG needs to be set before running this command.*
+  > *Note : The KUBECONFIG needs to be set before running this command.*
 
 ## Verification
 

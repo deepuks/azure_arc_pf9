@@ -15,7 +15,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
 * An Ubuntu 20.04 installed physical machine or VM. For this demonstration, we would be using single node quick cluster installation. This machine would also act as our management host.
 
-* The [kubectl](https://platform9.com/learn/tutorials/kubectl) exe for cluster management locally. In case you want to have a seperate host for cluster management, follow the below steps to [install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management).
+* The [kubectl](https://platform9.com/learn/tutorials/kubectl) exe for cluster management locally. In case you want to have a seperate host for cluster management, follow the below steps to [install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management) on it.
 
   ```shell
   sudo apt-get update
@@ -69,31 +69,13 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   ```shell
   az login
-  To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code XXXXXXXXX to authenticate.
   ```
 
-  Login by opening the page on browser and enter the code.
+  Login by opening the [Microsoft devicelogin page](https://microsoft.com/devicelogin) on browser and enter the code to authenticate.
 
-  Post successful authentication, a sample output would like below;
+  Sample output of a successful authentication would look like below;
 
-  ```shell
-    [
-    {
-        "cloudName": "AzureCloud",
-        "homeTenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "isDefault": true,
-        "managedByTenants": [],
-        "name": "Platform9-test",
-        "state": "Enabled",
-        "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "user": {
-        "name": "admin@mydomain.example.com",
-        "type": "user"
-        }
-    }
-    ]
-  ```
+  ![MSFT Device Login](./01.png)
 
   Once succeeded, create the Azure service principal (SP).
 
@@ -103,20 +85,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   Below is an example of creating a service principal.
 
-  ```shell
-  az ad sp create-for-rbac -n "platform9-AzureArcK8s" --role contributor
-  Creating 'contributor' role assignment under scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-  The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
-  'name' property in the output is deprecated and will be removed in the future. Use 'appId' instead.
-
-  {
-    "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "displayName": "platform9-AzureArcK8s",
-    "name": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "password": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "tenant": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  }
-  ```
+  ![Create Service Principal](./02.png)
 
   > *Note : It is highly recommended to scope the service principal to a specific [Azure subscription and resource group](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest) as well considering using a [less privileged service principal account](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest).*
 
@@ -128,31 +97,13 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   Below is an example of creating a resource group.
 
-  ```shell
-  az group create -l eastus -n Platform9-Arc-k8s-Clusters
-  ```
-  
-  The output would look like below:
-
-  ```shell
-    {
-    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/deepuks-Arc-k8s-Clusters",
-    "location": "eastus",
-    "managedBy": null,
-    "name": "Platform9-Arc-k8s-Clusters",
-    "properties": {
-        "provisioningState": "Succeeded"
-    },
-    "tags": null,
-    "type": "Microsoft.Resources/resourceGroups"
-    }
-  ```
+  ![Create Resource Group](./03.png)
 
 ## Deployment
 
 * Login to your Management Plane.
 
-  ![PMK Management Plane Login Page](./01.png)
+  ![PMK Management Plane Login Page](./04.png)
 
   > **If you do not have a registered Management Plane with Platform9, you can create one easily using [PMK Free Tier deployment](https://platform9.com/managed-kubernetes/)**
 
@@ -160,41 +111,37 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   For a BareOS cluster, you will need to have the nodes registered with the PMK Management Plane on which the cluster is to be deployed. For this, first add the node.
 
-  ![Onboard a node](./09.png)
+  ![Onboard a node](./05.png)
 
   This should take you to the Node onboarding page. A **pf9ctl** utility is provided to setup the nodes and get connected with Management Plane. Follow the instructions to download and install the utility, which we will use to prepare the node and connect it with your Platform9 Management Plane.
 
-  ![PF9 CLI](./10.png)
+  ![PF9 CLI](./06.png)
 
   > **Note: Preparing the node and connecting it to Management Plane might take approximately 4-5 minutes to complete.**
 
-* Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal).
+* Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) using the onboarded node.
 
-  The cluster creation is done from the PMK Management Plane UI.
-
-  The steps for cluster creation will follow as below;
+  The cluster creation is done from the PMK Management Plane UI. The steps for cluster creation will follow as below;
 
   Click to add cluster to the Management Plane.
 
-  ![Add Cluster](./02.png)
+  ![Add Cluster](./07.png)
 
   Create a cluster from the nodes onboarded to the Management Plane.
 
-  ![Create One Click Cluster](./03.png)
+  ![Create One Click Cluster](./08.png)
 
-  The cluster is created after a few minutes and the status should be reported as "Healthy".
+  Enter the cluster name, version and the node (in this demo we have only one node) and Complete the page.
 
-  ![Cluster Created](./04.png)
+  ![Cluster name entry](./09.png)
 
-* Once cluster is Ready, set the environment variables according to your Azure service principal name and Azure environment.
+  The cluster is created in a few minutes and the status should be reported as "Healthy".
 
-  ```shell
-  export appId=”xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
-  export password=”XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX”
-  export tenantId=”xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
-  export resourceGroup=”Platform9-Arc-k8s-Clusters”
-  export arcClusterName=”Arc-Platform9-Demo”
-  ```
+  ![Cluster Created](./10.png)
+
+* Once cluster is Ready, set the environment variables according to your Azure service principal name and Azure environment on the host.
+
+  ![Export values](./11.png)
 
   > *The values can referenced from the service principal and resource groups outputs.*
 
@@ -206,25 +153,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   An example output is shown below;
 
-  ```shell
-  $ az login --service-principal --username $appId --password $password --tenant $tenantId
-    [
-    {
-        "cloudName": "AzureCloud",
-        "homeTenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "isDefault": true,
-        "managedByTenants": [],
-        "name": "Platform9-dev",
-        "state": "Enabled",
-        "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "user": {
-        "name": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "type": "servicePrincipal"
-        }
-    }
-    ]
-  ```
+  ![Azure subscription login](./12.png)
 
 * Connect the Platform9 Managed Kubernetes (PMK) cluster to Azure Arc.
 
@@ -232,81 +161,34 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
   az connectedk8s connect --name $arcClusterName --resource-group $resourceGroup
   ```
 
-  An example output would look like below;
+  > **Note : The KUBECONFIG needs to be set before running this command. The kubeconfig file for the cluster can be downloaded from the Management Plane**
 
-  ```shell
-  $ az connectedk8s connect --name $arcClusterName --resource-group $resourceGroup
+  ![Download Kubeconfig](./13.png)
 
-  This operation might take a while...
+  An example output is shown below;
 
-  Downloading helm client for first time. This can take few minutes…
+  ![Export KUBECONFIG](./14.png)
 
-    {
-    "agentPublicKeyCertificate": "AAAA......................................................................................................................................................................................................................................................................................................................................................................................................................................AAQ==",
-    "agentVersion": null,
-    "connectivityStatus": "Connecting",
-    "distribution": "generic",
-    "id": "/subscriptions/576a4e39-4a73-4699-bafe-0093c02c336e/resourceGroups/deepuks-Arc-k8s-Clusters/providers/Microsoft.Kubernetes/connectedClusters/Arc-Platform9-Demo",
-    "identity": {
-        "principalId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "type": "SystemAssigned"
-    },
-    "infrastructure": "generic",
-    "kubernetesVersion": null,
-    "lastConnectivityTime": null,
-    "location": "eastus",
-    "managedIdentityCertificateExpirationTime": null,
-    "name": "Arc-Platform9-Demo",
-    "offering": null,
-    "provisioningState": "Succeeded",
-    "resourceGroup": "Platform9-Arc-k8s-Clusters",
-    "systemData": {
-        "createdAt": "2021-09-21T11:43:06.053637+00:00",
-        "createdBy": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "createdByType": "Application",
-        "lastModifiedAt": "2021-09-21T11:43:14.524678+00:00",
-        "lastModifiedBy": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "lastModifiedByType": "Application"
-    },
-    "tags": {},
-    "totalCoreCount": null,
-    "totalNodeCount": null,
-    "type": "microsoft.kubernetes/connectedclusters"
-    }
-  ```
+  ![Connect to Azure Arc](./15.png)
 
-  > *Note : The KUBECONFIG needs to be set before running this command.*
+
 
 ## Verification
 
 * The cluster should be seen onboarded as a new Azure Arc-enabled Kubernetes resource.
 
-  ![Cluster Verification](./05.png)
+  ![Cluster Verification](./16.png)
 
 * Azure Arc agents are running in the cluster.
 
-  ```shell
-  kubectl get pods -n azure-arc
-  NAME                                            READY   STATUS    RESTARTS   AGE
-  cluster-metadata-operator-77d878d65c-kxd4j   2/2     Running   0          11m
-  clusterconnect-agent-6d894d44b-m6857         3/3     Running   2          11m
-  clusteridentityoperator-578c88fb78-ljxql     2/2     Running   0          11m
-  config-agent-8485786d6b-sjv9c                1/2     Running   0          11m
-  controller-manager-5b99f7b9df-hcz5c          2/2     Running   0          11m
-  extension-manager-5d589c447d-54np9           2/2     Running   0          11m
-  flux-logs-agent-bd5659f94-m2s7t              1/1     Running   0          11m
-  kube-aad-proxy-db85dfc65-bj9db               1/2     Running   2          11m
-  metrics-agent-675566f58f-444h5               2/2     Running   0          11m
-  resource-sync-agent-5c547cd6-4x996           2/2     Running   0          11m
-  ```
+  ![List pods azure-arc](./17.png)
 
 ## Deleting the Deployment
 
 * The Azure Arc-enabled Kubernetes resource can be deleted via the Azure Portal.
 
-  ![Azure Arc cluster deletion](./06.png)
+  ![Azure Arc cluster deletion](./18.png)
 
 * For deleting the entire environment, just delete the Azure resource group that was created.
 
-  ![Azure Resource group deletion](./07.png)
+  ![Azure Resource group deletion](./19.png)

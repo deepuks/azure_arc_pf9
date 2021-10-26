@@ -28,7 +28,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   > **Note:** The *kubectl* package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository.
 
-  > **All PMK cluster nodes would have kubectl installed. If using an external host for managing the cluster, you would require to export the *kubeconfig.yaml* path to KUBECONFIG variable or save it to */$HOME/.kube/config***
+  > **All PMK cluster nodes would have kubectl installed once cluster is deployed.***
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 
@@ -131,23 +131,23 @@ This deployment consists of 3 parts.
 
 **Creating a PMK Cluster**
 
-* Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) using the onboarded node.
+* The onboarded node should now be seen on our Management Plane. Now let's create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) using that onboarded node.
 
   The cluster creation is done from the PMK Management Plane UI. The steps for cluster creation will follow as below;
 
-  Click to add cluster to the Management Plane.
+  i. Click to add cluster to the Management Plane.
 
   ![Add Cluster](./07.png)
 
-  Create a cluster from the nodes onboarded to the Management Plane.
+  ii. Create a cluster from the nodes onboarded to the Management Plane.
 
   ![Create One Click Cluster](./08.png)
 
-  Enter the cluster name and k8s version. Click on the Complete button at the bottom the page to submit and it will trigger the cluster creation on the node.
+  iii. Enter the cluster name and k8s version. Click on the Complete button at the bottom the page to submit and it will trigger the cluster creation on the node.
 
   ![Cluster name entry](./09.png)
 
-  The cluster should get created in a few minutes and the status should be reported as "Healthy".
+  iv. The cluster should get created in a few minutes and the status should be reported as **Healthy**.
 
   ![Cluster Created](./10.png)
 
@@ -175,7 +175,7 @@ This deployment consists of 3 parts.
   az connectedk8s connect --name $arcClusterName --resource-group $resourceGroup
   ```
 
-  > **Note : The KUBECONFIG needs to be set before running this command. The kubeconfig file for the cluster can be downloaded from the Management Plane**
+  > **Note : The KUBECONFIG variable needs to be set before running this command. The kubeconfig file for the cluster is available for download from the Management Plane**
 
   ![Download Kubeconfig](./13.png)
 

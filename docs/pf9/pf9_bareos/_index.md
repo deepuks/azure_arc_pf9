@@ -28,7 +28,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   > **Note:** The *kubectl* package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository.
 
-  > **All PMK cluster nodes would have these installed. If using an external host for managing the cluster, you would require to export the *kubeconfig.yaml* path to KUBECONFIG variable or save it to */$HOME/.kube/config***
+  > **All PMK cluster nodes would have kubectl installed. If using an external host for managing the cluster, you would require to export the *kubeconfig.yaml* path to KUBECONFIG variable or save it to */$HOME/.kube/config***
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 
@@ -103,10 +103,10 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 ## Deployment
 
 This deployment consists of 3 parts.
-    1. Onboarding the node to Platform9 Management Plane.
-    2. Creating a PMK Cluster.
-    3. Connect the cluster to Microsoft Azure Arc.
 
+  1. Onboarding the node to Platform9 Management Plane.
+  2. Creating a PMK Cluster.
+  3. Connect the cluster to Microsoft Azure Arc.
 
 **Onboarding the node to Platform9 Management Plane**
 
@@ -128,6 +128,7 @@ This deployment consists of 3 parts.
 
   > **Note: Preparing the node and connecting it to Management Plane might take approximately 4-5 minutes to complete.**
 
+
 **Creating a PMK Cluster**
 
 * Create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) using the onboarded node.
@@ -142,11 +143,11 @@ This deployment consists of 3 parts.
 
   ![Create One Click Cluster](./08.png)
 
-  Enter the cluster name, version and the node (in this demo we have only one node) and Complete the page.
+  Enter the cluster name and k8s version. Click on the Complete button at the bottom the page to submit and it will trigger the cluster creation on the node.
 
   ![Cluster name entry](./09.png)
 
-  The cluster is created in a few minutes and the status should be reported as "Healthy".
+  The cluster should get created in a few minutes and the status should be reported as "Healthy".
 
   ![Cluster Created](./10.png)
 

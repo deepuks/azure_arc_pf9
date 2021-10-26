@@ -28,7 +28,7 @@ With PMK, you can have your clusters deployed on-premises, in public clouds or a
 
   > **Note:** The *kubectl* package is installed from Kubernetes repository, hence the Google Cloud public signing key need to be downloaded to enable the repository.
 
-  > **All PMK cluster nodes would have kubectl installed once cluster is deployed.***
+  > **All PMK cluster nodes would have kubectl installed once cluster is deployed.**
 
 * [Azure CLI (az)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.15.0 and above. This cli tool would help to setup the Azure resources and connect the Kubernetes cluster to Azure Arc.
 
@@ -133,7 +133,7 @@ This deployment consists of 3 parts.
 
 * The onboarded node should now be seen on our Management Plane. Now let's create a [PMK cluster](https://platform9.com/learn/learn/get-started-bare-metal) using that onboarded node.
 
-  The cluster creation is done from the PMK Management Plane UI. The steps for cluster creation will follow as below;
+  The cluster creation is done from the PMK Management Plane UI. The steps for cluster creation will follow as below,
 
   i. Click to add cluster to the Management Plane.
 
@@ -143,7 +143,7 @@ This deployment consists of 3 parts.
 
   ![Create One Click Cluster](./08.png)
 
-  iii. Enter the cluster name and k8s version. Click on the Complete button at the bottom the page to submit and it will trigger the cluster creation on the node.
+  iii. Enter the cluster name and k8s version. Submit the page and it will trigger the cluster creation on the node.
 
   ![Cluster name entry](./09.png)
 

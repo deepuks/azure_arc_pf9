@@ -4,11 +4,9 @@ if [ $(awk -F= '/^NAME/{print $2}' /etc/os-release | tr -d '"') != "Ubuntu" ]; t
 	echo "Please run this script on an Ubuntu host"
 	exit 1;
 fi
-	
-sudo apt-get update -y
 
 if [ -e "./pf9_az.env"]; then
-    source ./pf9_az.env
+    . ./pf9_az.env
 else
     echo "The pf9_az environment config file doesn't exist. Please complete the Pre-requisites before running this script";
     exit 1;

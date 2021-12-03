@@ -137,7 +137,7 @@ This deployment consists of 3 sections.
 
   ![Screenshot of Exporting values](./08.png)
 
-  > **Note: The values can referenced from the service principal and resource groups outputs.**
+  > **Note: The values can referenced from the service principal output.**
 
 - Set the KUBECONFIG variable for connecting to the K8s cluster. The kubeconfig file for the cluster is available for download from the Management Plane.
 
@@ -177,4 +177,3 @@ This deployment consists of 3 sections.
 - For deleting the entire environment, just delete the Azure resource group that was created.
 
   ![Screenshot of Azure Resource group deletion](./14.png)
-  
